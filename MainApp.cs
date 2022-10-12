@@ -5,6 +5,12 @@ using System.Linq;
 namespace BowlingScorer
 {
     class MainApp {
+        /// <summary>
+        /// Takes a string array and joins them into one
+        /// </summary>
+        /// <param name="data">string array containing values to join</param>
+        /// <param name="join">separator to use to join strings</param>
+        /// <returns>a new joined string</returns>
         public static string Join(string[] data, string join)
         {
             string result = data[0];
@@ -15,6 +21,13 @@ namespace BowlingScorer
             return result;
         }
 
+        /// <summary>
+        /// Returns whether the given set contains at least one target
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="set"></param>
+        /// <returns></returns>
         public static bool In<T>(T target, T[] set)
         {
             foreach (T item in set)
@@ -23,18 +36,34 @@ namespace BowlingScorer
             return false;
         }
 
-        public static string Center(string data, int maxWidth)
+        /// <summary>
+        /// Returns a centered string
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string Center(string data, int length)
         {
-            if (data.Length == 0) return StringMult(" ", maxWidth);
-            if (maxWidth <= 0) return "";
+            if (data.Length == 0) return StringMult(" ", length);
+            if (length <= 0) return "";
 
-            int diff = maxWidth - data.Length;
+            int diff = length - data.Length;
             int offset = diff / 2;
 
             if (diff % 2 == 0) return StringMult(" ", offset) + data + StringMult(" ", offset);
             else return StringMult(" ", offset+1) + data + StringMult(" ", offset);
         }
 
+        /// <summary>
+        /// Returns a pattern which has been multiplied by a certain factor
+        /// </summary>
+        /// <example>
+        /// StringMult("*", 5) == "*****";
+        /// StringMult("abc", 3) == "abcabcabc";
+        /// </example>
+        /// <param name="pattern"></param>
+        /// <param name="factor"></param>
+        /// <returns></returns>
         public static string StringMult(string pattern, int factor)
         {
             string result = "";
@@ -45,15 +74,26 @@ namespace BowlingScorer
             return result;
         }
 
+        /// <summary>
+        /// Generates a border line
+        /// </summary>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
         public static string GenTableLine(int maxLength)
         {
-            string head = $"+-{StringMult("-", maxLength)}-+"; // name field
+            string head = $"+{StringMult("-", maxLength + 2)}+"; // name field
 
-            string frame = $"-{StringMult("-", 3)}-+"; // frames 1-9
-            string frame10 = $"-{StringMult("-", 5)}-+"; // frame 10 / total
+            string frame = $"{StringMult("-", 5)}+"; // frames 1-9
+            string frame10 = $"{StringMult("-", 7)}+"; // frame 10 / total
 
             return head + StringMult(frame, 9) + StringMult(frame10, 2); // name field + 9 frames + frame10 + total(same as frame10)
         }
+        /// <summary>
+        /// Generates a header line
+        /// </summary>
+        /// <param name="maxLength"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static string GenTableLine(int maxLength, string[] data)
         {
             string frames = $"| {data[0].PadRight(maxLength)} |"; // name field
@@ -63,17 +103,23 @@ namespace BowlingScorer
             // frames 1-9
             for (; i < 10; i++)
             {
-                frames += $" {Center(data[i], 3)} |";
+                frames += $"{Center(data[i], 5)}|";
             }
 
             // frame 10 / total
             for (; i < data.Length; i++)
             {
-                frames += $" {Center(data[i], 5)} |";
+                frames += $"{Center(data[i], 7)}|";
             }
 
             return frames;
         }
+        /// <summary>
+        /// Generate a score line
+        /// </summary>
+        /// <param name="maxLength"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public static string GenTableLine(int maxLength, Player player)
         {
             string frames = $"| {player.Name.PadRight(maxLength)} |"; // name field
@@ -110,6 +156,10 @@ namespace BowlingScorer
             return frames;
         }
 
+        /// <summary>
+        /// Display a table in the correct format
+        /// </summary>
+        /// <param name="players"></param>
         public static void DispTable(List<Player> players)
         {
             List<string> playerNames = players.Select((Player player, int x) => player.Name).ToList();
@@ -126,22 +176,26 @@ namespace BowlingScorer
             Console.WriteLine();
         }
 
-        public static void Main()
+        public static List<Player> AskPlayerNames()
         {
-            char[] allowedAlpha = "-123456789X/".ToCharArray();
-
             List<Player> players = new();
             while (true)
             {
-                Console.WriteLine($"Entrer le nom du joueur n°{players.Count+1} : ");
+                Console.WriteLine($"Entrer le nom du joueur n°{players.Count + 1} : ");
                 string name = Console.ReadLine();
-                if (name == null) return;
+                if (name == null) break;
                 Player player = new(name);
                 if (player.Name == "")
                     if (players.Count != 0) break;
                     else continue;
                 else players.Add(player);
             }
+            return players;
+        }
+
+        public static void Main()
+        {
+            List<Player> players = AskPlayerNames();
 
             int currentFrame = 0;
             int currentPlayer = 0;
@@ -153,32 +207,42 @@ namespace BowlingScorer
 
                 Player player = players[currentPlayer];
                 Frame frame = player.Frames[currentFrame];
-                Console.WriteLine($"Frame n°{currentFrame+1}");
+                Console.WriteLine($"Frame n°{frame.Index}");
                 Console.Write($"Score de {player.Name}, take {currentTake}: ");
                 string userInput = Console.ReadLine().ToUpper();
 
                 //data validation
-                if (userInput.Length != 1) continue;
-
-                char input = userInput.ToCharArray()[0];
-                if (!In(input, allowedAlpha) || currentTake == 1 && input == '/') continue;
-                //TODO: frame 10
-
-                //data registration => input is considered valid at this point
-                if (currentTake == 1 && input == 'X' && !frame.Is10th)
+                int userValue;
+                try
                 {
-                    frame.take2 = '0';
-                }
-                else if (currentTake == 2 && frame.take1 == '-' && input == 'X')
+                    userValue = Convert.ToInt32(userInput);
+                } catch (FormatException)
                 {
-                    input = '/';
+                    string value = userInput.Trim();
+                    if (value.Equals("X")) userValue = 10;
+                    else if (value.Equals("/"))
+                    {
+                        if (currentTake == 3) userValue = 10 - frame.Shot2;
+                        else userValue = 10 - frame.Shot1;
+                    }
+                    else if (value.Equals("-")) userValue = 0;
+                    else continue;
                 }
 
-                if (currentTake == 1) frame.take1 = input;
-                else if (currentTake == 2) frame.take2 = input;
-                else frame.take3 = input;
+                try
+                {
+                    if (currentTake == 1) frame.Shot1 = userValue;
+                    else if (currentTake == 2) frame.Shot2 = userValue;
+                    else frame.Shot3 = userValue;
+                } catch (Exception e) when (e is InvalidOperationException ||
+                                            e is ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Invalid input. try again...");
+                    Console.ReadKey();
+                    continue;
+                }
 
-                players[currentPlayer].Frames[currentFrame] = frame;
+                //players[currentPlayer].Frames[currentFrame] = frame;
 
                 currentTake++;
                 if (!frame.IsComplete) continue;
