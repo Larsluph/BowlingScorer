@@ -195,8 +195,11 @@ namespace BowlingScorer
 
         public static void Main()
         {
+            // Phase 1
             List<Player> players = AskPlayerNames();
+            // Phase 1
 
+            // Phase 2
             int currentFrame = 0;
             int currentPlayer = 0;
             int currentTake = 1;
@@ -254,7 +257,9 @@ namespace BowlingScorer
                     currentFrame++;
                 }
             }
+            // Phase 2
 
+            // Phase 3
             Console.Clear();
             DispTable(players);
 
@@ -277,6 +282,7 @@ namespace BowlingScorer
             else Console.WriteLine("Congratulations!");
 
             if (max == 0) Console.WriteLine("Looks like someone need to train their aim skills :/");
+            // Phase 3
         }
     }
 }
