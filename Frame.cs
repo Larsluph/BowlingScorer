@@ -29,7 +29,8 @@ namespace BowlingScorer
             set
             {
                 if (take1 == -1) throw new InvalidOperationException("First shot must be specified before specifying second shot");
-                else if (value < 0 || value > 10 - take1) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and ${10 - take1}");
+                else if (Is10th && IsStrike) take2 = value;
+                else if (value < 0 || value > 10 - take1) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and {10 - take1}");
                 else take2 = value;
             }
         }
@@ -37,14 +38,14 @@ namespace BowlingScorer
         {
             get {
                 if (!Is10th) throw new InvalidOperationException("Third shot isn't readable when not in 10th frame");
-                else return take2;
+                else return take3;
             }
             set
             {
                 if (!Is10th) throw new InvalidOperationException("Third shot is not writable outside 10th frame");
                 else if (take1 == -1 || take2 == -1) throw new InvalidOperationException("Can't specify third shot if previous shots have not been specified");
+                else if (IsStrike && value > 10 - take2 && take2 != 10) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and {10 - take2}");
                 else if (value < 0 || value > 10) throw new ArgumentOutOfRangeException(nameof(value), "Value must be between 0 and 10");
-                else if (IsStrike && value > 10 - take2 && take2 != 10) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and ${10 - take2}");
                 else take3 = value;
             }
         }

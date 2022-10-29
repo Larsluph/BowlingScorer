@@ -49,8 +49,7 @@ namespace BowlingScorer
                 Frame frame = Frames[i];
                 if (!frame.IsComplete) yield break;
                 else if (frame.Is10th)
-                    if (frame.IsStrike) total += 10 + frame.Shot2 + frame.Shot3;
-                    else if (frame.IsSpare) total += 10 + frame.Shot3;
+                    if (frame.IsSpecial) total += frame.Shot1 + frame.Shot2 + frame.Shot3;
                     else total += frame.Shot1 + frame.Shot2;
                 else if (frame.IsSpecial)
                 {

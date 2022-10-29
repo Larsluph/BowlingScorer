@@ -193,13 +193,8 @@ namespace BowlingScorer
             return players;
         }
 
-        public static void Main()
+        public static void Mainloop(List<Player> players)
         {
-            // Phase 1
-            List<Player> players = AskPlayerNames();
-            // Phase 1
-
-            // Phase 2
             int currentFrame = 0;
             int currentPlayer = 0;
             int currentTake = 1;
@@ -219,17 +214,26 @@ namespace BowlingScorer
                 try
                 {
                     userValue = Convert.ToInt32(userInput);
-                } catch (FormatException)
+                }
+                catch (FormatException)
                 {
                     string value = userInput.Trim();
                     if (value.Equals("X")) userValue = 10;
                     else if (value.Equals("/"))
                     {
-                        if (currentTake == 3) userValue = 10 - frame.Shot2;
+                        if (currentTake == 3)
+                            if (frame.IsStrike) userValue = 10 - frame.Shot2;
+                            else if (frame.IsSpare) userValue = 10;
+                            else throw new InvalidOperationException("3rd shot is unusable when frame isn't special");
                         else userValue = 10 - frame.Shot1;
                     }
                     else if (value.Equals("-")) userValue = 0;
-                    else continue;
+                    else
+                    {
+                        Console.Write("Invalid format. try again...");
+                        Console.ReadKey();
+                        continue;
+                    }
                 }
 
                 try
@@ -237,15 +241,14 @@ namespace BowlingScorer
                     if (currentTake == 1) frame.Shot1 = userValue;
                     else if (currentTake == 2) frame.Shot2 = userValue;
                     else frame.Shot3 = userValue;
-                } catch (Exception e) when (e is InvalidOperationException ||
-                                            e is ArgumentOutOfRangeException)
+                }
+                catch (Exception e) when (e is InvalidOperationException or
+                                          ArgumentOutOfRangeException)
                 {
-                    Console.WriteLine("Invalid input. try again...");
+                    Console.Write("{0}: {1}", e.GetType().Name, e.Message);
                     Console.ReadKey();
                     continue;
                 }
-
-                //players[currentPlayer].Frames[currentFrame] = frame;
 
                 currentTake++;
                 if (!frame.IsComplete) continue;
@@ -257,9 +260,10 @@ namespace BowlingScorer
                     currentFrame++;
                 }
             }
-            // Phase 2
+        }
 
-            // Phase 3
+        public static void DispEndGame(List<Player> players)
+        {
             Console.Clear();
             DispTable(players);
 
@@ -275,13 +279,27 @@ namespace BowlingScorer
                     winner = player.Name;
                     max = total;
                 }
-                if (player.GetTotal() < min) min = total;
+                if (total < min) min = total;
             }
-            Console.Write($"The winner is {winner}! ");
+            Console.Write($"The winner is {winner} with {max} points! ");
             if (players.Count == 1) Console.WriteLine("Well played! (Even if you're alone)");
             else Console.WriteLine("Congratulations!");
 
-            if (max == 0) Console.WriteLine("Looks like someone need to train their aim skills :/");
+            if (min == 0) Console.WriteLine("Looks like someone need to train their aim skills :/");
+        }
+
+        public static void Main()
+        {
+            // Phase 1
+            List<Player> players = AskPlayerNames();
+            // Phase 1
+
+            // Phase 2
+            Mainloop(players);
+            // Phase 2
+
+            // Phase 3
+            DispEndGame(players);
             // Phase 3
         }
     }
