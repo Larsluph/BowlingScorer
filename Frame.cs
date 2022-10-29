@@ -23,6 +23,17 @@ namespace BowlingScorer
                 }
             }
         }
+        public char FormattedShot1
+        {
+            get
+            {
+                if (take1 == -1) return ' ';
+                else if (IsStrike) return 'X';
+                else if (take1 == 0) return '-';
+                else return take1.ToString().ToCharArray()[0];
+            }
+        }
+
         public int Shot2
         {
             get { return take2; }
@@ -34,6 +45,18 @@ namespace BowlingScorer
                 else take2 = value;
             }
         }
+        public char FormattedShot2
+        {
+            get
+            {
+                if (take2 == -1) return ' ';
+                else if (IsSpare) return '/';
+                else if (take2 == 0) return '-';
+                else if (Is10th && take2 == 10) return 'X';
+                else return take2.ToString().ToCharArray()[0];
+            }
+        }
+
         public int Shot3
         {
             get {
@@ -47,6 +70,18 @@ namespace BowlingScorer
                 else if (IsStrike && value > 10 - take2 && take2 != 10) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and {10 - take2}");
                 else if (value < 0 || value > 10) throw new ArgumentOutOfRangeException(nameof(value), "Value must be between 0 and 10");
                 else take3 = value;
+            }
+        }
+        public char FormattedShot3
+        {
+            get
+            {
+                if (!Is10th) throw new InvalidOperationException("Third shot isn't readable when not in 10th frame");
+                else if (take3 == -1) return ' ';
+                else if (take3 == 10) return 'X';
+                else if (take2 + take3 == 10) return '/';
+                else if (take3 == 0) return '-';
+                else return take3.ToString().ToCharArray()[0];
             }
         }
 
@@ -83,36 +118,12 @@ namespace BowlingScorer
 
         public override string ToString()
         {
-            char res1;
-            if (take1 == -1) res1 = ' ';
-            else if (IsStrike) res1 = 'X';
-            else if (take1 == 0) res1 = '-';
-            else res1 = take1.ToString().ToCharArray()[0];
-
-            char res2;
-            if (take2 == -1) res2 = ' ';
-            else if (IsSpare) res2 = '/';
-            else if (take2 == 0) res2 = '-';
-            else if (Is10th && take2 == 10) res2 = 'X';
-            else res2 = take2.ToString().ToCharArray()[0];
-
             if (Is10th)
-            {
                 //frame 10
-                char res3;
-                if (take3 == -1) res3 = ' ';
-                else if (take3 == 10) res3 = 'X';
-                else if (take2 + take3 == 10) res3 = '/';
-                else if (take3 == 0) res3 = '-';
-                else res3 = take3.ToString().ToCharArray()[0];
-
-                return IsSpecial ? $"{res1} {res2} {res3}" : $"{res1}   {res2}";
-            }
+                return IsSpecial ? $"{FormattedShot1} {FormattedShot2} {FormattedShot3}" : $"{FormattedShot1}   {FormattedShot2}";
             else
-            {
                 // frame 1-9
-                return IsStrike ? $"  {res1}" : $"{res1} {res2}";
-            }
+                return IsStrike ? $"  {FormattedShot1}" : $"{FormattedShot1} {FormattedShot2}";
         }
     }
 }
