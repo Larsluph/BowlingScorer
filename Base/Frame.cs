@@ -2,7 +2,7 @@
 
 namespace BowlingScorer
 {
-    internal class Frame
+    public class Frame
     {
         public int Index;
         private int take1;

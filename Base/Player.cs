@@ -6,7 +6,7 @@ namespace BowlingScorer
     /// <summary>
     /// This class represents a Player
     /// </summary>
-    internal class Player
+    public class Player
     {
         public string Name;
         public Frame[] Frames;
