@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BowlingScorer
+﻿namespace BowlingScorer
 {
     public class Frame
     {
@@ -11,7 +9,11 @@ namespace BowlingScorer
 
         public int Shot1
         {
-            get { return take1; }
+            get
+            {
+                if (take1 == -1) throw new InvalidOperationException("Can't read null property");
+                else return take1;
+            }
             set
             {
                 if (value < 0 || value > 10) throw new ArgumentOutOfRangeException(nameof(value), "Value must be between 0 and 10");
@@ -36,13 +38,20 @@ namespace BowlingScorer
 
         public int Shot2
         {
-            get { return take2; }
+            get
+            {
+                if (take2 == -1) throw new InvalidOperationException("Can't read null property");
+                else return take2;
+            }
             set
             {
                 if (take1 == -1) throw new InvalidOperationException("First shot must be specified before specifying second shot");
                 else if (Is10th && IsStrike) take2 = value;
                 else if (value < 0 || value > 10 - take1) throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between 0 and {10 - take1}");
                 else take2 = value;
+
+                if (Is10th && take1 + take2 != 10)
+                    take3 = 0;
             }
         }
         public char FormattedShot2
@@ -61,6 +70,7 @@ namespace BowlingScorer
         {
             get {
                 if (!Is10th) throw new InvalidOperationException("Third shot isn't readable when not in 10th frame");
+                else if (take3 == -1) throw new InvalidOperationException("Can't read null property");
                 else return take3;
             }
             set

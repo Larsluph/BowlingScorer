@@ -19,10 +19,17 @@ namespace GUI
     /// </summary>
     public partial class ScoreUI : Window
     {
-        private int columnCount = 23;
-        private int rowCount = 3;
+        /// <summary>
+        /// <para>columnCount is a constant which is composed of</para>
+        /// <para>1 for the player names</para>
+        /// <para>2*9 = 18 for the 9 first frames (2 shots per frame)</para>
+        /// <para>3 for the 10th frame</para>
+        /// <para>1 for the total</para>
+        /// </summary>
+        private readonly int columnCount = 1 + 2 * 9 + 3 + 1;
+        private readonly int rowCount;
 
-        private List<string> players;
+        private readonly List<string> players;
 
         public ScoreUI()
         {
@@ -30,79 +37,70 @@ namespace GUI
             players = new();
         }
 
-        public ScoreUI(ListBox listPlayers) : this()
+        public ScoreUI(List<string> listPlayers) : this()
         {
-            players = listPlayers.Items.Cast<string>().ToList();
+            players = listPlayers;
 
-            rowCount = 1 + (2 * players.Count);
+            rowCount = 1 + (2 * players.Count); // Header + 2 lines per player (frame values + frame total)
 
+            for (int i = 0; i < rowCount; i++)
+                grid.RowDefinitions.Add(new());
             for (int i = 0; i < columnCount; i++)
-            {
                 grid.ColumnDefinitions.Add(new());
-            }
 
-            //Header
+            // Header
+            GenHeaderRow();
 
-            //Player name
+            // Players
+            GenPlayerRows();
+        }
+
+        private void GenCell(string text, int row, int column, int rowSpan = 1, int columnSpan = 1)
+        {
             TextBlock txt = new()
             {
-                Text = "Player Name",
+                Text = text,
                 TextAlignment = TextAlignment.Center
             };
-            Grid.SetRow(txt, 0);
-            Grid.SetColumn(txt, 0);
+
+            Grid.SetRow(txt, row);
+            Grid.SetRowSpan(txt, rowSpan);
+
+            Grid.SetColumn(txt, column);
+            Grid.SetColumnSpan(txt, columnSpan);
+
             grid.Children.Add(txt);
+        }
+
+        private void GenHeaderRow()
+        {
+            //Player name
+            GenCell("Player Name", 0, 0);
 
             //Frame 1 to 9
-            for (int i = 1; i < 10; i++)
-            {
-                txt = new()
-                {
-                    Text = i.ToString(),
-                    TextAlignment = TextAlignment.Center
-                };
-                Grid.SetRow(txt, 0);
-                Grid.SetColumn(txt, 1 + (2 * (i - 1)));
-                Grid.SetColumnSpan(txt, 2);
-
-                grid.Children.Add(txt);
-            }
+            for (int i = 1; i <= 9; i++)
+                GenCell(i.ToString(), 0, 1 + (2 * (i - 1)), columnSpan: 2);
 
             //Frame 10
-            txt = new()
-            {
-                Text = "10",
-                TextAlignment = TextAlignment.Center
-            };
-            Grid.SetRow(txt, 0);
-            Grid.SetColumn(txt, 19);
-            Grid.SetColumnSpan(txt, 3);
-            grid.Children.Add(txt);
+            GenCell("10", 0, 19, columnSpan: 3);
 
             //Total
-            txt = new()
-            {
-                Text = "Total",
-                TextAlignment = TextAlignment.Center
-            };
-            Grid.SetRow(txt, 0);
-            Grid.SetColumn(txt, 22);
-            grid.Children.Add(txt);
+            GenCell("Total", 0, 22);
+        }
 
+        private void GenPlayerRows()
+        {
             for (int i = 0; i < players.Count; i++)
             {
-                grid.RowDefinitions.Add(new RowDefinition());
-                grid.RowDefinitions.Add(new RowDefinition());
-                txt = new()
-                {
-                    Text = players[i],
-                    TextAlignment = TextAlignment.Center
-                };
-                Grid.SetRow(txt, 1 + (i * 2));
-                Grid.SetRowSpan(txt, 2);
-                Grid.SetColumn(txt, 0);
+                int row = 1 + (i * 2);
 
-                grid.Children.Add(txt);
+                // Name
+                GenCell(players[i], row, 0, rowSpan: 2);
+
+                for (int j = 0; j <= 9; j++)
+                {
+                    GenCell(" ", row, 1 + (2 * (i - 1)));
+                }
             }
         }
     }
