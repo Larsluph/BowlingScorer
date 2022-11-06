@@ -1,4 +1,4 @@
-﻿namespace BowlingScorer
+﻿namespace Base
 {
     public class Frame
     {
@@ -68,7 +68,8 @@
 
         public int Shot3
         {
-            get {
+            get
+            {
                 if (!Is10th) throw new InvalidOperationException("Third shot isn't readable when not in 10th frame");
                 else if (take3 == -1) throw new InvalidOperationException("Can't read null property");
                 else return take3;
@@ -102,7 +103,7 @@
             Index = frame_index;
             take1 = -1;
             take2 = -1;
-            take3 = (Is10th) ? -1 : 0;
+            take3 = Is10th ? -1 : 0;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace BowlingScorer
+﻿namespace Base
 {
     /// <summary>
     /// This class represents a Player
@@ -13,7 +13,7 @@
             Frames = new Frame[10];
             for (short i = 1; i <= Frames.Length; i++)
             {
-                Frames[i-1] = new(i);
+                Frames[i - 1] = new(i);
             }
         }
 

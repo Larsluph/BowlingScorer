@@ -5,11 +5,11 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base", "Base\Base.csproj", "{433E8092-30EF-4FC7-879B-36A3C7FD9A36}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Console\Console.csproj", "{DBE07022-B38B-4A7F-8BC5-83DE807BD60C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "Console\CLI.csproj", "{DBE07022-B38B-4A7F-8BC5-83DE807BD60C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI", "GUI\GUI.csproj", "{5F6456E3-40A4-454B-A576-F7634E48999A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C49BC348-5F63-4389-8F81-BFFC2D478EA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{C49BC348-5F63-4389-8F81-BFFC2D478EA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,6 @@
-namespace BowlingScorer
+using Base;
+
+namespace Tests
 {
     [TestClass]
     public class TestFrame
