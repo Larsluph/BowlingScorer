@@ -96,11 +96,11 @@
             }
         }
 
-        public Frame(int frame_index)
+        public Frame(int index)
         {
-            if (frame_index < 1 || frame_index > 10) throw new ArgumentOutOfRangeException(nameof(frame_index));
+            if (index < 1 || index > 10) throw new ArgumentOutOfRangeException(nameof(index));
 
-            Index = frame_index;
+            Index = index;
             take1 = -1;
             take2 = -1;
             take3 = Is10th ? -1 : 0;
