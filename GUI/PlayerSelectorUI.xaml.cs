@@ -11,16 +11,6 @@ namespace GUI
         public PlayerSelectorUI()
         {
             InitializeComponent();
-
-            //Loaded += (sender, e) => {
-            //    _ = listPlayers.Items.Add("Rémi");
-            //    _ = listPlayers.Items.Add("Vincent");
-            //    _ = listPlayers.Items.Add("Théo");
-            //    _ = listPlayers.Items.Add("Paul");
-            //    _ = listPlayers.Items.Add("Florian");
-
-            //    OnClick_Validate(sender, e);
-            //};
         }
 
         private void OnClick_Add(object sender, RoutedEventArgs e)

@@ -13,9 +13,13 @@ namespace GUI
         App()
         {
             // Phase 1: Ask player names
+#if DEBUG
+            List<string> playerNames = new() { "Rémi", "Vincent", "Théo", "Paul", "Florian" };
+#else
             PlayerSelectorUI playerSelector = new();
             playerSelector.ShowDialog();
             List<string> playerNames = playerSelector.listPlayers.Items.Cast<string>().ToList();
+#endif
             // Phase 1
 
             // Phase 2: Game loop
