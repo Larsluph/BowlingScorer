@@ -7,6 +7,7 @@
         private int take2;
         private int take3;
 
+        public bool IsShot1Filled => take1 != -1;
         public int Shot1
         {
             get
@@ -36,6 +37,7 @@
             }
         }
 
+        public bool IsShot2Filled => take2 != -1;
         public int Shot2
         {
             get
@@ -66,6 +68,7 @@
             }
         }
 
+        public bool IsShot3Filled => take3 != -1;
         public int Shot3
         {
             get

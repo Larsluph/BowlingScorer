@@ -52,16 +52,16 @@
                 {
                     Frame nextFrame = Frames[i + 1];
                     if (frame.IsStrike)
-                        if (nextFrame.Is10th && nextFrame.Shot2 != -1) total += 10 + nextFrame.Shot1 + nextFrame.Shot2;
+                        if (nextFrame.Is10th && nextFrame.IsShot2Filled) total += 10 + nextFrame.Shot1 + nextFrame.Shot2;
                         else if (nextFrame.IsStrike)
                         {
                             if (nextFrame.Is10th)
-                                if (nextFrame.Shot2 == -1) yield break;
+                                if (!nextFrame.IsShot2Filled) yield break;
                                 else total += 20 + nextFrame.Shot2;
                             else
                             {
                                 Frame next2Frame = Frames[i + 2];
-                                if (next2Frame.Shot1 == -1) yield break;
+                                if (!next2Frame.IsShot1Filled) yield break;
                                 else total += 20 + next2Frame.Shot1;
                             }
                         }
@@ -69,7 +69,7 @@
                         else if (nextFrame.IsComplete) total += 10 + nextFrame.Shot1 + nextFrame.Shot2;
                         else yield break;
                     else if (frame.IsSpare)
-                        if (nextFrame.Shot1 == -1) yield break;
+                        if (!nextFrame.IsShot1Filled) yield break;
                         else total += 10 + nextFrame.Shot1;
                 }
                 else total += frame.Shot1 + frame.Shot2;
